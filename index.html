@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>3D TRASAR&trade; Technology for Shell Control &mdash; Value Calculator</title>
-<meta name="description" content="Customer value calculator for investment casting shell slurry viscosity control using Rheonics SlurrySense sensors and 3D TRASAR Technology for Shell Control.">
+<meta name="description" content="Customer value calculator for investment casting shell slurry viscosity control using Rheonics SlurrySense inline sensors and 3D TRASAR Technology for Shell Control. Includes scrap reduction, revenue uplift, labor, slurry life, downtime and safety modeling.">
 <style>
   :root {
     --nalco-blue: #003a70;
@@ -12,11 +12,13 @@
     --nalco-teal: #00a7b5;
     --nalco-accent: #e87722;
     --nalco-green: #2e7d32;
+    --nalco-purple: #6b2d8f;
     --card-bg: #ffffff;
     --page-bg: #f4f6f9;
     --border: #dbe1ea;
     --text: #1f2a3a;
     --muted: #5b6b80;
+    --disabled: #eef1f5;
   }
   * { box-sizing: border-box; }
   html, body {
@@ -27,30 +29,30 @@
     color: var(--text);
     line-height: 1.45;
   }
-  header {
+  header.site-header {
     background: linear-gradient(135deg, var(--nalco-blue) 0%, var(--nalco-blue-dark) 100%);
     color: #fff;
     padding: 28px 32px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.15);
   }
-  header .brand-line {
+  header.site-header .brand-line {
     font-size: 12px;
     letter-spacing: 2px;
     text-transform: uppercase;
     opacity: 0.85;
     margin-bottom: 6px;
   }
-  header h1 {
+  header.site-header h1 {
     margin: 0 0 4px 0;
     font-size: 26px;
     font-weight: 600;
   }
-  header .subtitle {
+  header.site-header .subtitle {
     font-size: 15px;
     opacity: 0.9;
   }
   main {
-    max-width: 1200px;
+    max-width: 1220px;
     margin: 24px auto;
     padding: 0 20px 60px 20px;
   }
@@ -102,6 +104,22 @@
     box-shadow: 0 2px 6px rgba(0,0,0,0.04);
     display: flex;
     flex-direction: column;
+    transition: opacity 0.2s;
+    position: relative;
+  }
+  .card.disabled { opacity: 0.45; }
+  .card.disabled::after {
+    content: 'Inactive under current Revenue Model';
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    background: #b0392c;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 3px;
+    letter-spacing: 0.5px;
   }
   .card h2 {
     margin: 0 0 4px 0;
@@ -119,7 +137,10 @@
     padding: 3px 8px;
     border-radius: 3px;
     letter-spacing: 1px;
+    min-width: 24px;
+    text-align: center;
   }
+  .card .driver-tag.revenue { background: var(--nalco-accent); }
   .card .desc {
     font-size: 13px;
     color: var(--muted);
@@ -142,18 +163,24 @@
     font-size: 11px;
     margin-left: 4px;
   }
-  .field input[type="number"] {
+  .field input[type="number"], .field input[type="text"] {
     padding: 8px 10px;
     font-size: 14px;
     border: 1px solid var(--border);
     border-radius: 4px;
     background: #fbfcfe;
     transition: border-color 0.15s, box-shadow 0.15s;
+    font-family: inherit;
   }
-  .field input[type="number"]:focus {
+  .field input[type="number"]:focus, .field input[type="text"]:focus {
     outline: none;
     border-color: var(--nalco-teal);
     box-shadow: 0 0 0 3px rgba(0,167,181,0.15);
+  }
+  .field input[readonly] {
+    background: #eef4fb !important;
+    color: var(--nalco-blue);
+    font-weight: 600;
   }
   .formula {
     font-family: 'Courier New', monospace;
@@ -203,6 +230,43 @@
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 12px;
   }
+  .model-card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-left: 5px solid var(--nalco-purple);
+    border-radius: 8px;
+    padding: 18px 20px;
+    margin-bottom: 20px;
+  }
+  .model-card h2 {
+    margin: 0 0 10px 0;
+    font-size: 16px;
+    color: var(--nalco-blue);
+  }
+  .model-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 10px;
+  }
+  .model-option {
+    border: 2px solid var(--border);
+    padding: 12px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+    background: #fbfcfe;
+  }
+  .model-option:hover { border-color: var(--nalco-teal); background: #f5fafb; }
+  .model-option input[type="radio"] { margin-right: 8px; }
+  .model-option .m-title { font-weight: 700; font-size: 14px; color: var(--nalco-blue); }
+  .model-option .m-sub { font-size: 12px; color: var(--muted); margin-top: 4px; margin-left: 22px; }
+  .model-option.selected { border-color: var(--nalco-accent); background: #fff5ec; }
+  .model-note {
+    font-size: 12px; color: var(--muted); margin-top: 10px;
+    padding: 8px 10px; background: #f0f3f7; border-radius: 4px;
+    border-left: 3px solid var(--nalco-purple);
+  }
+  .model-note strong { color: var(--text); }
 
   .total-banner {
     margin-top: 26px;
@@ -224,7 +288,7 @@
     opacity: 0.9;
   }
   .total-banner .total-value {
-    font-size: 40px;
+    font-size: 42px;
     font-weight: 700;
     margin-top: 4px;
   }
@@ -235,7 +299,7 @@
   }
   .capture-box { text-align: right; }
   .capture-box .cap-lbl { font-size: 12px; opacity: 0.85; }
-  .capture-box .cap-val { font-size: 20px; font-weight: 600; color: var(--nalco-accent); }
+  .capture-box .cap-val { font-size: 22px; font-weight: 600; color: var(--nalco-accent); margin-top: 4px; }
 
   .summary {
     margin-top: 20px;
@@ -262,25 +326,46 @@
     background: #eef4fb; border-top: 2px solid var(--nalco-blue); border-bottom: none;
   }
   .summary tr.total-row td.value { color: var(--nalco-blue); }
+  .summary tr.inactive td { color: #a0aab8; font-style: italic; }
+  .summary tr.inactive td.value { color: #a0aab8; }
+  .summary tr.subtotal td {
+    background: #fef8f2;
+    font-size: 12px;
+    color: var(--nalco-accent);
+    font-style: italic;
+  }
+  .summary tr.subtotal td.value { color: var(--nalco-accent); }
 
-  footer { text-align: center; padding: 20px; font-size: 12px; color: var(--muted); }
+  footer {
+    text-align: center; padding: 20px;
+    font-size: 12px; color: var(--muted);
+  }
 
   @media print {
-    header { background: var(--nalco-blue) !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    header.site-header {
+      background: var(--nalco-blue) !important;
+      -webkit-print-color-adjust: exact; print-color-adjust: exact;
+    }
     .toolbar { display: none; }
-    .card { break-inside: avoid; page-break-inside: avoid; }
+    .card, .global-card, .model-card, .summary, .total-banner {
+      break-inside: avoid; page-break-inside: avoid;
+      box-shadow: none;
+    }
     body { background: #fff; }
+    .total-banner {
+      -webkit-print-color-adjust: exact; print-color-adjust: exact;
+    }
   }
   @media (max-width: 600px) {
-    header { padding: 20px 18px; }
-    header h1 { font-size: 20px; }
+    header.site-header { padding: 20px 18px; }
+    header.site-header h1 { font-size: 20px; }
     .total-banner .total-value { font-size: 30px; }
   }
 </style>
 </head>
 <body>
 
-<header>
+<header class="site-header">
   <div class="brand-line">Nalco Water &mdash; an Ecolab Company &nbsp;|&nbsp; Colloidal Technologies Group</div>
   <h1>3D TRASAR&trade; Technology for Shell Control</h1>
   <div class="subtitle">Investment Casting Value Calculator &mdash; Powered by Rheonics SlurrySense&trade; inline viscometers</div>
@@ -289,7 +374,7 @@
 <main>
 
   <div class="intro">
-    <strong>How to use:</strong> Enter your plant&rsquo;s shell slurry operating parameters below. The calculator quantifies annual savings across the five value drivers delivered by <strong>3D TRASAR&trade; Technology for Shell Control</strong> with <strong>Rheonics SlurrySense&trade;</strong> inline viscosity monitoring. All values recalculate live as you type. Defaults reflect a typical 3-slurry-tank investment casting operation.
+    <strong>How to use:</strong> Enter your plant&rsquo;s shell slurry operating parameters below. The calculator quantifies annual savings across six value drivers delivered by <strong>3D TRASAR&trade; Technology for Shell Control</strong> with <strong>Rheonics SlurrySense&trade;</strong> inline viscosity monitoring. Select a Revenue Claim Model to control how recovered good parts are valued (avoid double counting). All values recalculate live as you type.
   </div>
 
   <div class="toolbar">
@@ -297,16 +382,29 @@
     <button class="btn secondary" onclick="resetAll()">&#8635; Reset to Defaults</button>
   </div>
 
+  <!-- ================= GLOBAL PLANT BASELINE ================= -->
   <div class="global-card">
     <h2>&#127981; Plant Baseline Inputs</h2>
     <div class="row">
       <div class="field">
-        <label>Annual production volume <span class="unit">(parts/yr)</span></label>
-        <input type="number" id="annual_parts" value="14503" step="100">
+        <label>Customer / Site Name <span class="unit">(optional)</span></label>
+        <input type="text" id="customer_name" value="" placeholder="Enter customer name">
       </div>
       <div class="field">
-        <label>Average revenue / cost per part <span class="unit">($)</span></label>
-        <input type="number" id="cost_per_part" value="1926" step="10">
+        <label>Annual production volume <span class="unit">(parts/yr)</span></label>
+        <input type="number" id="annual_parts" value="14503" step="100" min="0">
+      </div>
+      <div class="field">
+        <label>Average production cost per part <span class="unit">($)</span></label>
+        <input type="number" id="cost_per_part" value="1759" step="10" min="0">
+      </div>
+      <div class="field">
+        <label>Average selling price per part <span class="unit">($)</span></label>
+        <input type="number" id="selling_price" value="1862" step="10" min="0">
+      </div>
+      <div class="field">
+        <label>Variable cost % of selling price <span class="unit">(%, 40-60 typical)</span></label>
+        <input type="number" id="vc_pct" value="40" step="1" min="0" max="100">
       </div>
       <div class="field">
         <label>Number of slurry tanks monitored <span class="unit">(#)</span></label>
@@ -314,26 +412,58 @@
       </div>
       <div class="field">
         <label>Loaded labor rate <span class="unit">($/hr)</span></label>
-        <input type="number" id="labor_rate" value="25" step="1">
+        <input type="number" id="labor_rate" value="25" step="1" min="0">
       </div>
     </div>
   </div>
 
+  <!-- ================= REVENUE MODEL TOGGLE ================= -->
+  <div class="model-card">
+    <h2>&#127919; Revenue Claim Model <span style="font-size:12px;font-weight:400;color:var(--muted);">&mdash; Controls how recovered good parts are valued (prevents double counting)</span></h2>
+    <div class="model-options" id="model_options">
+      <label class="model-option" id="opt_A">
+        <input type="radio" name="rev_model" value="A" onchange="calc()">
+        <span class="m-title">A &mdash; Conservative</span>
+        <div class="m-sub">Cost recovery only. No revenue claim. Use when demand is limited or bottleneck is unclear.</div>
+      </label>
+      <label class="model-option selected" id="opt_B">
+        <input type="radio" name="rev_model" value="B" checked onchange="calc()">
+        <span class="m-title">B &mdash; Moderate &nbsp;&#11088;</span>
+        <div class="m-sub">Cost recovery + contribution margin on recovered parts. Matches Ecolab internal Value Bridge precedent.</div>
+      </label>
+      <label class="model-option" id="opt_C">
+        <input type="radio" name="rev_model" value="C" onchange="calc()">
+        <span class="m-title">C &mdash; Aggressive</span>
+        <div class="m-sub">Full revenue on recovered parts (replaces scrap cost recovery). Use only when capacity-constrained with strong demand.</div>
+      </label>
+    </div>
+    <div class="model-note">
+      <strong>Model B formula (from Shell Control Wetting In Doc):</strong> Revenue Uplift = V &times; R &times; P &times; (1 &minus; VC%)
+      where V = annual attempted castings, R = scrap-rate reduction, P = avg selling price, VC% = variable cost of price (40&ndash;60% typical).
+    </div>
+  </div>
+
+  <!-- ================= VALUE DRIVER CARDS ================= -->
   <div class="grid">
 
-    <div class="card">
+    <!-- CARD 1: SCRAP -->
+    <div class="card" id="card_scrap">
       <h2><span class="driver-tag">1</span> Scrap Reduction from Shell Consistency</h2>
-      <p class="desc">Fewer shell-related defects (shell cracking, weight deviation, bulge) once real-time viscosity monitoring stabilizes the slurry inside its control band.</p>
+      <p class="desc">Recovered production cost from fewer shell-related defects (cracking, weight deviation, bulge, pinholes) once real-time viscosity monitoring stabilizes the slurry inside its control band.</p>
       <div class="field">
         <label>Baseline shell-related scrap rate <span class="unit">(%)</span></label>
-        <input type="number" id="scrap_baseline" value="1.57" step="0.01">
+        <input type="number" id="scrap_baseline" value="1.6" step="0.01" min="0">
       </div>
       <div class="field">
         <label>Expected scrap reduction factor <span class="unit">(%)</span></label>
-        <input type="number" id="scrap_factor" value="30" step="1">
+        <input type="number" id="scrap_factor" value="30" step="1" min="0" max="100">
       </div>
-      <div class="formula">
-        savings = parts &times; cost_per_part &times; (scrap% / 100) &times; (reduction% / 100)
+      <div class="field">
+        <label>Recovered good parts per year <span class="unit">(auto-calculated)</span></label>
+        <input type="number" id="recovered_parts_display" value="0" readonly>
+      </div>
+      <div class="formula" id="scrap_formula_display">
+        savings = recovered_parts &times; cost_per_part
       </div>
       <div class="result">
         <span class="lbl">Annual Savings</span>
@@ -341,20 +471,42 @@
       </div>
     </div>
 
+    <!-- CARD 1b: REVENUE UPLIFT -->
+    <div class="card" id="card_revenue">
+      <h2><span class="driver-tag revenue">1b</span> Revenue Uplift on Recovered Parts</h2>
+      <p class="desc">Contribution margin captured when recovered good parts are sold to satisfy existing demand. Active only in <strong>Model B</strong>.</p>
+      <div class="field">
+        <label>Total Revenue Improvement (gross) <span class="unit">($, auto-calculated)</span></label>
+        <input type="number" id="revenue_gross_display" value="0" readonly>
+      </div>
+      <div class="field">
+        <label>Contribution margin factor <span class="unit">(1 &minus; VC%, auto)</span></label>
+        <input type="number" id="cm_display" value="0" readonly step="0.01">
+      </div>
+      <div class="formula">
+        uplift = recovered &times; selling_price &times; (1 &minus; VC% / 100)
+      </div>
+      <div class="result">
+        <span class="lbl">Annual Revenue Uplift</span>
+        <span class="val" id="out_revenue">$0</span>
+      </div>
+    </div>
+
+    <!-- CARD 2: LABOR -->
     <div class="card">
       <h2><span class="driver-tag">2</span> Labor Reduction &mdash; Manual Viscosity Readings</h2>
       <p class="desc">Operator hours reallocated by eliminating manual viscosity cup measurements and data-entry across every slurry tank per shift.</p>
       <div class="field">
         <label>Manual readings per tank per day <span class="unit">(#)</span></label>
-        <input type="number" id="lab_readings" value="9" step="1">
+        <input type="number" id="lab_readings" value="9" step="1" min="0">
       </div>
       <div class="field">
         <label>Minutes per reading (incl. logging) <span class="unit">(min)</span></label>
-        <input type="number" id="lab_minutes" value="15" step="1">
+        <input type="number" id="lab_minutes" value="15" step="1" min="0">
       </div>
       <div class="field">
         <label>Operating days per year <span class="unit">(days)</span></label>
-        <input type="number" id="lab_days" value="340" step="1">
+        <input type="number" id="lab_days" value="340" step="1" min="0">
       </div>
       <div class="formula">
         savings = tanks &times; readings/day &times; days &times; (minutes / 60) &times; labor_rate
@@ -365,16 +517,17 @@
       </div>
     </div>
 
+    <!-- CARD 3: SLURRY LIFE -->
     <div class="card">
       <h2><span class="driver-tag">3</span> Slurry Life Extension &amp; Disposal Reduction</h2>
       <p class="desc">Extended slurry life and reduced disposal frequency from keeping viscosity inside spec 24/7 &mdash; less binder/water/refractory over-dosing.</p>
       <div class="field">
         <label>Annual disposal + chemistry cost per tank <span class="unit">($)</span></label>
-        <input type="number" id="sl_cost" value="20000" step="500">
+        <input type="number" id="sl_cost" value="20000" step="500" min="0">
       </div>
       <div class="field">
         <label>Disposal / chemistry reduction factor <span class="unit">(%)</span></label>
-        <input type="number" id="sl_factor" value="25" step="1">
+        <input type="number" id="sl_factor" value="25" step="1" min="0" max="100">
       </div>
       <div class="formula">
         savings = tanks &times; disposal_cost_per_tank &times; (reduction% / 100)
@@ -385,20 +538,21 @@
       </div>
     </div>
 
+    <!-- CARD 4: DOWNTIME -->
     <div class="card">
       <h2><span class="driver-tag">4</span> Downtime Reduction &amp; Reliability</h2>
       <p class="desc">Unplanned downtime avoided: robot pauses during manual reads, viscosity-cup-drop incidents, and out-of-spec slurry events that stop dipping.</p>
       <div class="field">
         <label>Baseline slurry-related downtime <span class="unit">(hrs/yr)</span></label>
-        <input type="number" id="dt_hours" value="80" step="1">
+        <input type="number" id="dt_hours" value="80" step="1" min="0">
       </div>
       <div class="field">
         <label>Downtime cost per hour <span class="unit">($/hr)</span></label>
-        <input type="number" id="dt_cost" value="1200" step="50">
+        <input type="number" id="dt_cost" value="1200" step="50" min="0">
       </div>
       <div class="field">
         <label>Downtime reduction factor <span class="unit">(%)</span></label>
-        <input type="number" id="dt_factor" value="40" step="1">
+        <input type="number" id="dt_factor" value="40" step="1" min="0" max="100">
       </div>
       <div class="formula">
         savings = downtime_hrs &times; (reduction% / 100) &times; cost_per_hr
@@ -409,20 +563,21 @@
       </div>
     </div>
 
+    <!-- CARD 5: SAFETY -->
     <div class="card">
       <h2><span class="driver-tag">5</span> Safety &mdash; Fall / Injury Risk Reduction</h2>
       <p class="desc">Reduced probability of fall injury or robot-zone incident by eliminating ladder access to slurry tanks for manual viscosity cup readings.</p>
       <div class="field">
         <label>Operators exposed to tank access <span class="unit">(#)</span></label>
-        <input type="number" id="sf_ops" value="3" step="1">
+        <input type="number" id="sf_ops" value="3" step="1" min="0">
       </div>
       <div class="field">
         <label>Cost per injury incident <span class="unit">($)</span></label>
-        <input type="number" id="sf_cost" value="2800" step="100">
+        <input type="number" id="sf_cost" value="2800" step="100" min="0">
       </div>
       <div class="field">
         <label>Annual injury-probability reduction <span class="unit">(%)</span></label>
-        <input type="number" id="sf_prob" value="1.86" step="0.01">
+        <input type="number" id="sf_prob" value="1.86" step="0.01" min="0" max="100">
       </div>
       <div class="formula">
         savings = operators &times; injury_cost &times; (probability% / 100)
@@ -435,14 +590,18 @@
 
   </div>
 
+  <!-- ================= VALUE BRIDGE SUMMARY ================= -->
   <div class="summary">
-    <h3>Value Bridge Summary</h3>
+    <h3>Value Bridge Summary <span id="summary_customer" style="font-weight:400;font-size:12px;color:var(--muted);"></span></h3>
     <table>
       <thead>
-        <tr><th>#</th><th>Value Driver</th><th style="text-align:right;">Annual Savings</th></tr>
+        <tr><th>#</th><th>Value Driver</th><th style="text-align:right;">Annual Value</th></tr>
       </thead>
       <tbody>
-        <tr><td>1</td><td>Scrap Reduction from Shell Consistency</td><td class="value" id="sum_scrap">$0</td></tr>
+        <tr><td>&mdash;</td><td>Recovered good parts per year</td><td class="value" id="sum_recovered">0</td></tr>
+        <tr><td>1</td><td id="sum_scrap_label">Scrap Reduction from Shell Consistency</td><td class="value" id="sum_scrap">$0</td></tr>
+        <tr id="sum_row_revenue"><td>1b</td><td>Revenue Uplift on Recovered Parts</td><td class="value" id="sum_revenue">$0</td></tr>
+        <tr class="subtotal"><td></td><td>Subtotal &mdash; Scrap-linked value</td><td class="value" id="sum_scrap_subtotal">$0</td></tr>
         <tr><td>2</td><td>Labor Reduction &mdash; Manual Viscosity Readings</td><td class="value" id="sum_labor">$0</td></tr>
         <tr><td>3</td><td>Slurry Life Extension &amp; Disposal Reduction</td><td class="value" id="sum_slurry">$0</td></tr>
         <tr><td>4</td><td>Downtime Reduction &amp; Reliability</td><td class="value" id="sum_downtime">$0</td></tr>
@@ -450,13 +609,19 @@
         <tr class="total-row"><td></td><td>TOTAL ANNUAL VALUE DELIVERED</td><td class="value" id="sum_total">$0</td></tr>
       </tbody>
     </table>
+    <p style="font-size:11px;color:var(--muted);margin-top:10px;">
+      Active model: <strong id="active_model_label">B &mdash; Moderate</strong>.
+      In Models A and C, the Revenue Uplift line is $0 to prevent double-counting.
+      In Model C, the Scrap Reduction line is valued at the full selling price and replaces the Model A/B cost-recovery value.
+    </p>
   </div>
 
+  <!-- ================= TOTAL BANNER ================= -->
   <div class="total-banner">
     <div>
       <div class="total-label">Total Annual Value Delivered</div>
       <div class="total-value" id="grand_total">$0</div>
-      <div class="sub-total">Across all 5 value drivers &mdash; recalculates live as you type</div>
+      <div class="sub-total">Across all active value drivers &mdash; recalculates live as you type</div>
     </div>
     <div class="capture-box">
       <div class="cap-lbl">Estimated Ecolab Value Capture (30%)</div>
@@ -467,13 +632,16 @@
 </main>
 
 <footer>
-  3D TRASAR&trade;, SlurrySense&trade;, CleanWave&trade;, and Ecolab3D&trade; are trademarks of Ecolab USA Inc. / Rheonics.
+  3D TRASAR&trade;, SlurrySense&trade;, CleanWave&trade;, and ECOLAB3D&trade; are trademarks of Ecolab USA Inc. / Rheonics.
+  &nbsp;|&nbsp; Formulas grounded in <em>Shell Control Wetting In Doc</em>, <em>MTPP 4-2-26 Deck</em>, and the <em>3DT Trasar for Shell Control Launch Training Deck</em> Value Bridge.
   &nbsp;|&nbsp; For internal &amp; customer proposal use.
 </footer>
 
 <script>
+  // ---------- Helpers ----------
   function num(id) {
     var el = document.getElementById(id);
+    if (!el) return 0;
     var v = parseFloat(el.value);
     return isNaN(v) ? 0 : v;
   }
@@ -481,69 +649,161 @@
   var fmt = new Intl.NumberFormat('en-US', {
     style: 'currency', currency: 'USD', maximumFractionDigits: 0
   });
+  var intFmt = new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 });
 
   var DEFAULTS = {};
 
+  // ---------- Main Calculation ----------
   function calc() {
     var parts   = num('annual_parts');
     var cpp     = num('cost_per_part');
+    var price   = num('selling_price');
+    var vc      = num('vc_pct') / 100;
     var tanks   = num('num_tanks');
     var rate    = num('labor_rate');
 
-    // 1. SCRAP
-    var scrapSavings =
-      parts * cpp * (num('scrap_baseline') / 100) * (num('scrap_factor') / 100);
+    // Which revenue model?
+    var modelEl = document.querySelector('input[name="rev_model"]:checked');
+    var model = modelEl ? modelEl.value : 'B';
 
-    // 2. LABOR
+    // ---- Shared: recovered parts from scrap reduction ----
+    var scrapFrac = (num('scrap_baseline') / 100) * (num('scrap_factor') / 100);
+    var recovered = parts * scrapFrac;
+
+    // ---- 1. SCRAP VALUE (behavior depends on model) ----
+    // Models A & B: value at production cost
+    // Model C: value at full selling price (replaces cost recovery)
+    var scrapValue = 0;
+    if (model === 'A' || model === 'B') {
+      scrapValue = recovered * cpp;
+    } else if (model === 'C') {
+      scrapValue = recovered * price;
+    }
+
+    // ---- 1b. REVENUE UPLIFT (only Model B) ----
+    var revenueGross = recovered * price;
+    var revenueUplift = 0;
+    if (model === 'B') {
+      revenueUplift = revenueGross * (1 - vc);
+    }
+
+    // ---- 2. LABOR ----
     var laborSavings =
       tanks * num('lab_readings') * num('lab_days') *
       (num('lab_minutes') / 60) * rate;
 
-    // 3. SLURRY LIFE / DISPOSAL
-    var slurrySavings =
-      tanks * num('sl_cost') * (num('sl_factor') / 100);
+    // ---- 3. SLURRY LIFE / DISPOSAL ----
+    var slurrySavings = tanks * num('sl_cost') * (num('sl_factor') / 100);
 
-    // 4. DOWNTIME
-    var downtimeSavings =
-      num('dt_hours') * (num('dt_factor') / 100) * num('dt_cost');
+    // ---- 4. DOWNTIME ----
+    var downtimeSavings = num('dt_hours') * (num('dt_factor') / 100) * num('dt_cost');
 
-    // 5. SAFETY
-    var safetySavings =
-      num('sf_ops') * num('sf_cost') * (num('sf_prob') / 100);
+    // ---- 5. SAFETY ----
+    var safetySavings = num('sf_ops') * num('sf_cost') * (num('sf_prob') / 100);
 
-    var total = scrapSavings + laborSavings + slurrySavings +
-                downtimeSavings + safetySavings;
+    // ---- Total ----
+    var scrapSubtotal = scrapValue + revenueUplift;
+    var total = scrapValue + revenueUplift + laborSavings +
+                slurrySavings + downtimeSavings + safetySavings;
     var capture = total * 0.30;
 
-    document.getElementById('out_scrap').textContent    = fmt.format(scrapSavings);
+    // ---- UI updates: revenue card visibility ----
+    var revCard = document.getElementById('card_revenue');
+    var scrapFormulaEl = document.getElementById('scrap_formula_display');
+    var scrapLabelEl = document.getElementById('sum_scrap_label');
+    var sumRevRow = document.getElementById('sum_row_revenue');
+
+    if (model === 'B') {
+      revCard.classList.remove('disabled');
+    } else {
+      revCard.classList.add('disabled');
+    }
+
+    // Update scrap formula display + summary label per model
+    if (model === 'C') {
+      scrapFormulaEl.innerHTML = 'value = recovered_parts &times; selling_price &nbsp; <em>(full revenue replaces cost recovery)</em>';
+      scrapLabelEl.innerHTML = 'Scrap Reduction &mdash; valued at full selling price (Model C)';
+    } else {
+      scrapFormulaEl.innerHTML = 'savings = recovered_parts &times; cost_per_part';
+      scrapLabelEl.innerHTML = 'Scrap Reduction from Shell Consistency';
+    }
+
+    // Style the summary revenue row inactive for A & C
+    if (model === 'B') {
+      sumRevRow.classList.remove('inactive');
+    } else {
+      sumRevRow.classList.add('inactive');
+    }
+
+    // ---- Model option visual selection ----
+    ['A','B','C'].forEach(function(m){
+      var el = document.getElementById('opt_' + m);
+      if (el) {
+        if (m === model) el.classList.add('selected');
+        else el.classList.remove('selected');
+      }
+    });
+
+    // ---- Active model label ----
+    var modelLabels = {
+      'A': 'A &mdash; Conservative (cost only)',
+      'B': 'B &mdash; Moderate (cost + contribution margin)',
+      'C': 'C &mdash; Aggressive (full revenue on recovered)'
+    };
+    document.getElementById('active_model_label').innerHTML = modelLabels[model];
+
+    // ---- Card outputs ----
+    document.getElementById('recovered_parts_display').value = Math.round(recovered);
+    document.getElementById('revenue_gross_display').value = Math.round(revenueGross);
+    document.getElementById('cm_display').value = (1 - vc).toFixed(2);
+
+    document.getElementById('out_scrap').textContent    = fmt.format(scrapValue);
+    document.getElementById('out_revenue').textContent  = fmt.format(revenueUplift);
     document.getElementById('out_labor').textContent    = fmt.format(laborSavings);
     document.getElementById('out_slurry').textContent   = fmt.format(slurrySavings);
     document.getElementById('out_downtime').textContent = fmt.format(downtimeSavings);
     document.getElementById('out_safety').textContent   = fmt.format(safetySavings);
 
-    document.getElementById('sum_scrap').textContent    = fmt.format(scrapSavings);
-    document.getElementById('sum_labor').textContent    = fmt.format(laborSavings);
-    document.getElementById('sum_slurry').textContent   = fmt.format(slurrySavings);
-    document.getElementById('sum_downtime').textContent = fmt.format(downtimeSavings);
-    document.getElementById('sum_safety').textContent   = fmt.format(safetySavings);
-    document.getElementById('sum_total').textContent    = fmt.format(total);
+    // ---- Summary table ----
+    document.getElementById('sum_recovered').textContent      = intFmt.format(Math.round(recovered)) + ' parts';
+    document.getElementById('sum_scrap').textContent          = fmt.format(scrapValue);
+    document.getElementById('sum_revenue').textContent        = fmt.format(revenueUplift);
+    document.getElementById('sum_scrap_subtotal').textContent = fmt.format(scrapSubtotal);
+    document.getElementById('sum_labor').textContent          = fmt.format(laborSavings);
+    document.getElementById('sum_slurry').textContent         = fmt.format(slurrySavings);
+    document.getElementById('sum_downtime').textContent       = fmt.format(downtimeSavings);
+    document.getElementById('sum_safety').textContent         = fmt.format(safetySavings);
+    document.getElementById('sum_total').textContent          = fmt.format(total);
 
+    // ---- Banner ----
     document.getElementById('grand_total').textContent  = fmt.format(total);
     document.getElementById('capture_val').textContent  = fmt.format(capture);
+
+    // ---- Customer name label ----
+    var cn = document.getElementById('customer_name').value;
+    document.getElementById('summary_customer').textContent = cn ? '\u2014 Prepared for ' + cn : '';
   }
 
+  // ---------- Reset ----------
   function resetAll() {
     Object.keys(DEFAULTS).forEach(function(id){
-      document.getElementById(id).value = DEFAULTS[id];
+      var el = document.getElementById(id);
+      if (el) el.value = DEFAULTS[id];
     });
+    // Reset radio to B
+    var bRadio = document.querySelector('input[name="rev_model"][value="B"]');
+    if (bRadio) bRadio.checked = true;
     calc();
   }
 
+  // ---------- Boot ----------
   document.addEventListener('DOMContentLoaded', function () {
-    var inputs = document.querySelectorAll('input[type="number"]');
+    var inputs = document.querySelectorAll('input[type="number"], input[type="text"]');
     inputs.forEach(function(el){
-      DEFAULTS[el.id] = el.value;
-      el.addEventListener('input', calc);
+      if (!el.readOnly) {
+        DEFAULTS[el.id] = el.value;
+        el.addEventListener('input', calc);
+      }
     });
     calc();
   });
