@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3D TRASAR&trade; Technology for Shell Control &mdash; Value Calculator</title>
+<meta name="description" content="Customer value calculator for investment casting shell slurry viscosity control using Rheonics SlurrySense sensors and 3D TRASAR Technology for Shell Control.">
+<style>
+  :root {
+    --nalco-blue: #003a70;
+    --nalco-blue-dark: #002347;
+    --nalco-teal: #00a7b5;
+    --nalco-accent: #e87722;
+    --nalco-green: #2e7d32;
+    --card-bg: #ffffff;
+    --page-bg: #f4f6f9;
+    --border: #dbe1ea;
+    --text: #1f2a3a;
+    --muted: #5b6b80;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+    background: var(--page-bg);
+    color: var(--text);
+    line-height: 1.45;
+  }
+  header {
+    background: linear-gradient(135deg, var(--nalco-blue) 0%, var(--nalco-blue-dark) 100%);
+    color: #fff;
+    padding: 28px 32px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+  }
+  header .brand-line {
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    opacity: 0.85;
+    margin-bottom: 6px;
+  }
+  header h1 {
+    margin: 0 0 4px 0;
+    font-size: 26px;
+    font-weight: 600;
+  }
+  header .subtitle {
+    font-size: 15px;
+    opacity: 0.9;
+  }
+  main {
+    max-width: 1200px;
+    margin: 24px auto;
+    padding: 0 20px 60px 20px;
+  }
+  .intro {
+    background: #fff;
+    border-left: 5px solid var(--nalco-teal);
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    font-size: 14px;
+    color: var(--muted);
+  }
+  .intro strong { color: var(--text); }
+
+  .toolbar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+  }
+  .btn {
+    background: var(--nalco-blue);
+    color: #fff;
+    border: none;
+    padding: 10px 18px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .btn:hover { background: var(--nalco-blue-dark); }
+  .btn.secondary { background: #6c7a8c; }
+  .btn.secondary:hover { background: #4d5a6b; }
+  .btn.accent { background: var(--nalco-accent); }
+  .btn.accent:hover { background: #c65e14; }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+    gap: 18px;
+  }
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+    display: flex;
+    flex-direction: column;
+  }
+  .card h2 {
+    margin: 0 0 4px 0;
+    font-size: 17px;
+    color: var(--nalco-blue);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .card .driver-tag {
+    background: var(--nalco-teal);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 3px;
+    letter-spacing: 1px;
+  }
+  .card .desc {
+    font-size: 13px;
+    color: var(--muted);
+    margin: 8px 0 14px 0;
+  }
+  .field {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+  }
+  .field label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+  .field .unit {
+    color: var(--muted);
+    font-weight: 400;
+    font-size: 11px;
+    margin-left: 4px;
+  }
+  .field input[type="number"] {
+    padding: 8px 10px;
+    font-size: 14px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    background: #fbfcfe;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .field input[type="number"]:focus {
+    outline: none;
+    border-color: var(--nalco-teal);
+    box-shadow: 0 0 0 3px rgba(0,167,181,0.15);
+  }
+  .formula {
+    font-family: 'Courier New', monospace;
+    background: #f0f3f7;
+    padding: 8px 10px;
+    font-size: 12px;
+    border-radius: 4px;
+    margin: 8px 0 12px 0;
+    color: #37475e;
+    border-left: 3px solid var(--nalco-teal);
+    word-break: break-word;
+  }
+  .result {
+    margin-top: auto;
+    padding-top: 14px;
+    border-top: 1px dashed var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+  .result .lbl {
+    font-size: 13px;
+    color: var(--muted);
+    font-weight: 600;
+  }
+  .result .val {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--nalco-green);
+  }
+
+  .global-card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-left: 5px solid var(--nalco-accent);
+    border-radius: 8px;
+    padding: 18px 20px;
+    margin-bottom: 20px;
+  }
+  .global-card h2 {
+    margin: 0 0 12px 0;
+    font-size: 16px;
+    color: var(--nalco-blue);
+  }
+  .global-card .row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+  }
+
+  .total-banner {
+    margin-top: 26px;
+    background: linear-gradient(135deg, var(--nalco-blue) 0%, var(--nalco-blue-dark) 100%);
+    color: #fff;
+    padding: 22px 28px;
+    border-radius: 8px;
+    box-shadow: 0 6px 16px rgba(0,58,112,0.25);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .total-banner .total-label {
+    font-size: 14px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    opacity: 0.9;
+  }
+  .total-banner .total-value {
+    font-size: 40px;
+    font-weight: 700;
+    margin-top: 4px;
+  }
+  .total-banner .sub-total {
+    font-size: 13px;
+    opacity: 0.85;
+    margin-top: 2px;
+  }
+  .capture-box { text-align: right; }
+  .capture-box .cap-lbl { font-size: 12px; opacity: 0.85; }
+  .capture-box .cap-val { font-size: 20px; font-weight: 600; color: var(--nalco-accent); }
+
+  .summary {
+    margin-top: 20px;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 18px 20px;
+  }
+  .summary h3 { margin: 0 0 12px 0; font-size: 15px; color: var(--nalco-blue); }
+  .summary table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .summary th, .summary td {
+    text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--border);
+  }
+  .summary th {
+    background: #f7f9fc; color: var(--muted); font-weight: 600;
+    font-size: 11px; letter-spacing: 0.8px; text-transform: uppercase;
+  }
+  .summary td.value {
+    text-align: right; font-weight: 600;
+    font-family: 'Courier New', monospace; color: var(--nalco-green);
+  }
+  .summary tr.total-row td {
+    font-size: 15px; font-weight: 700; color: var(--nalco-blue);
+    background: #eef4fb; border-top: 2px solid var(--nalco-blue); border-bottom: none;
+  }
+  .summary tr.total-row td.value { color: var(--nalco-blue); }
+
+  footer { text-align: center; padding: 20px; font-size: 12px; color: var(--muted); }
+
+  @media print {
+    header { background: var(--nalco-blue) !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .toolbar { display: none; }
+    .card { break-inside: avoid; page-break-inside: avoid; }
+    body { background: #fff; }
+  }
+  @media (max-width: 600px) {
+    header { padding: 20px 18px; }
+    header h1 { font-size: 20px; }
+    .total-banner .total-value { font-size: 30px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand-line">Nalco Water &mdash; an Ecolab Company &nbsp;|&nbsp; Colloidal Technologies Group</div>
+  <h1>3D TRASAR&trade; Technology for Shell Control</h1>
+  <div class="subtitle">Investment Casting Value Calculator &mdash; Powered by Rheonics SlurrySense&trade; inline viscometers</div>
+</header>
+
+<main>
+
+  <div class="intro">
+    <strong>How to use:</strong> Enter your plant&rsquo;s shell slurry operating parameters below. The calculator quantifies annual savings across the five value drivers delivered by <strong>3D TRASAR&trade; Technology for Shell Control</strong> with <strong>Rheonics SlurrySense&trade;</strong> inline viscosity monitoring. All values recalculate live as you type. Defaults reflect a typical 3-slurry-tank investment casting operation.
+  </div>
+
+  <div class="toolbar">
+    <button class="btn accent" onclick="window.print()">&#128424; Print / Save PDF</button>
+    <button class="btn secondary" onclick="resetAll()">&#8635; Reset to Defaults</button>
+  </div>
+
+  <div class="global-card">
+    <h2>&#127981; Plant Baseline Inputs</h2>
+    <div class="row">
+      <div class="field">
+        <label>Annual production volume <span class="unit">(parts/yr)</span></label>
+        <input type="number" id="annual_parts" value="14503" step="100">
+      </div>
+      <div class="field">
+        <label>Average revenue / cost per part <span class="unit">($)</span></label>
+        <input type="number" id="cost_per_part" value="1926" step="10">
+      </div>
+      <div class="field">
+        <label>Number of slurry tanks monitored <span class="unit">(#)</span></label>
+        <input type="number" id="num_tanks" value="3" step="1" min="1">
+      </div>
+      <div class="field">
+        <label>Loaded labor rate <span class="unit">($/hr)</span></label>
+        <input type="number" id="labor_rate" value="25" step="1">
+      </div>
+    </div>
+  </div>
+
+  <div class="grid">
+
+    <div class="card">
+      <h2><span class="driver-tag">1</span> Scrap Reduction from Shell Consistency</h2>
+      <p class="desc">Fewer shell-related defects (shell cracking, weight deviation, bulge) once real-time viscosity monitoring stabilizes the slurry inside its control band.</p>
+      <div class="field">
+        <label>Baseline shell-related scrap rate <span class="unit">(%)</span></label>
+        <input type="number" id="scrap_baseline" value="1.57" step="0.01">
+      </div>
+      <div class="field">
+        <label>Expected scrap reduction factor <span class="unit">(%)</span></label>
+        <input type="number" id="scrap_factor" value="30" step="1">
+      </div>
+      <div class="formula">
+        savings = parts &times; cost_per_part &times; (scrap% / 100) &times; (reduction% / 100)
+      </div>
+      <div class="result">
+        <span class="lbl">Annual Savings</span>
+        <span class="val" id="out_scrap">$0</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2><span class="driver-tag">2</span> Labor Reduction &mdash; Manual Viscosity Readings</h2>
+      <p class="desc">Operator hours reallocated by eliminating manual viscosity cup measurements and data-entry across every slurry tank per shift.</p>
+      <div class="field">
+        <label>Manual readings per tank per day <span class="unit">(#)</span></label>
+        <input type="number" id="lab_readings" value="9" step="1">
+      </div>
+      <div class="field">
+        <label>Minutes per reading (incl. logging) <span class="unit">(min)</span></label>
+        <input type="number" id="lab_minutes" value="15" step="1">
+      </div>
+      <div class="field">
+        <label>Operating days per year <span class="unit">(days)</span></label>
+        <input type="number" id="lab_days" value="340" step="1">
+      </div>
+      <div class="formula">
+        savings = tanks &times; readings/day &times; days &times; (minutes / 60) &times; labor_rate
+      </div>
+      <div class="result">
+        <span class="lbl">Annual Savings</span>
+        <span class="val" id="out_labor">$0</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2><span class="driver-tag">3</span> Slurry Life Extension &amp; Disposal Reduction</h2>
+      <p class="desc">Extended slurry life and reduced disposal frequency from keeping viscosity inside spec 24/7 &mdash; less binder/water/refractory over-dosing.</p>
+      <div class="field">
+        <label>Annual disposal + chemistry cost per tank <span class="unit">($)</span></label>
+        <input type="number" id="sl_cost" value="20000" step="500">
+      </div>
+      <div class="field">
+        <label>Disposal / chemistry reduction factor <span class="unit">(%)</span></label>
+        <input type="number" id="sl_factor" value="25" step="1">
+      </div>
+      <div class="formula">
+        savings = tanks &times; disposal_cost_per_tank &times; (reduction% / 100)
+      </div>
+      <div class="result">
+        <span class="lbl">Annual Savings</span>
+        <span class="val" id="out_slurry">$0</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2><span class="driver-tag">4</span> Downtime Reduction &amp; Reliability</h2>
+      <p class="desc">Unplanned downtime avoided: robot pauses during manual reads, viscosity-cup-drop incidents, and out-of-spec slurry events that stop dipping.</p>
+      <div class="field">
+        <label>Baseline slurry-related downtime <span class="unit">(hrs/yr)</span></label>
+        <input type="number" id="dt_hours" value="80" step="1">
+      </div>
+      <div class="field">
+        <label>Downtime cost per hour <span class="unit">($/hr)</span></label>
+        <input type="number" id="dt_cost" value="1200" step="50">
+      </div>
+      <div class="field">
+        <label>Downtime reduction factor <span class="unit">(%)</span></label>
+        <input type="number" id="dt_factor" value="40" step="1">
+      </div>
+      <div class="formula">
+        savings = downtime_hrs &times; (reduction% / 100) &times; cost_per_hr
+      </div>
+      <div class="result">
+        <span class="lbl">Annual Savings</span>
+        <span class="val" id="out_downtime">$0</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2><span class="driver-tag">5</span> Safety &mdash; Fall / Injury Risk Reduction</h2>
+      <p class="desc">Reduced probability of fall injury or robot-zone incident by eliminating ladder access to slurry tanks for manual viscosity cup readings.</p>
+      <div class="field">
+        <label>Operators exposed to tank access <span class="unit">(#)</span></label>
+        <input type="number" id="sf_ops" value="3" step="1">
+      </div>
+      <div class="field">
+        <label>Cost per injury incident <span class="unit">($)</span></label>
+        <input type="number" id="sf_cost" value="2800" step="100">
+      </div>
+      <div class="field">
+        <label>Annual injury-probability reduction <span class="unit">(%)</span></label>
+        <input type="number" id="sf_prob" value="1.86" step="0.01">
+      </div>
+      <div class="formula">
+        savings = operators &times; injury_cost &times; (probability% / 100)
+      </div>
+      <div class="result">
+        <span class="lbl">Annual Savings</span>
+        <span class="val" id="out_safety">$0</span>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="summary">
+    <h3>Value Bridge Summary</h3>
+    <table>
+      <thead>
+        <tr><th>#</th><th>Value Driver</th><th style="text-align:right;">Annual Savings</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td>Scrap Reduction from Shell Consistency</td><td class="value" id="sum_scrap">$0</td></tr>
+        <tr><td>2</td><td>Labor Reduction &mdash; Manual Viscosity Readings</td><td class="value" id="sum_labor">$0</td></tr>
+        <tr><td>3</td><td>Slurry Life Extension &amp; Disposal Reduction</td><td class="value" id="sum_slurry">$0</td></tr>
+        <tr><td>4</td><td>Downtime Reduction &amp; Reliability</td><td class="value" id="sum_downtime">$0</td></tr>
+        <tr><td>5</td><td>Safety &mdash; Fall / Injury Risk Reduction</td><td class="value" id="sum_safety">$0</td></tr>
+        <tr class="total-row"><td></td><td>TOTAL ANNUAL VALUE DELIVERED</td><td class="value" id="sum_total">$0</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="total-banner">
+    <div>
+      <div class="total-label">Total Annual Value Delivered</div>
+      <div class="total-value" id="grand_total">$0</div>
+      <div class="sub-total">Across all 5 value drivers &mdash; recalculates live as you type</div>
+    </div>
+    <div class="capture-box">
+      <div class="cap-lbl">Estimated Ecolab Value Capture (30%)</div>
+      <div class="cap-val" id="capture_val">$0</div>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  3D TRASAR&trade;, SlurrySense&trade;, CleanWave&trade;, and Ecolab3D&trade; are trademarks of Ecolab USA Inc. / Rheonics.
+  &nbsp;|&nbsp; For internal &amp; customer proposal use.
+</footer>
+
+<script>
+  function num(id) {
+    var el = document.getElementById(id);
+    var v = parseFloat(el.value);
+    return isNaN(v) ? 0 : v;
+  }
+
+  var fmt = new Intl.NumberFormat('en-US', {
+    style: 'currency', currency: 'USD', maximumFractionDigits: 0
+  });
+
+  var DEFAULTS = {};
+
+  function calc() {
+    var parts   = num('annual_parts');
+    var cpp     = num('cost_per_part');
+    var tanks   = num('num_tanks');
+    var rate    = num('labor_rate');
+
+    // 1. SCRAP
+    var scrapSavings =
+      parts * cpp * (num('scrap_baseline') / 100) * (num('scrap_factor') / 100);
+
+    // 2. LABOR
+    var laborSavings =
+      tanks * num('lab_readings') * num('lab_days') *
+      (num('lab_minutes') / 60) * rate;
+
+    // 3. SLURRY LIFE / DISPOSAL
+    var slurrySavings =
+      tanks * num('sl_cost') * (num('sl_factor') / 100);
+
+    // 4. DOWNTIME
+    var downtimeSavings =
+      num('dt_hours') * (num('dt_factor') / 100) * num('dt_cost');
+
+    // 5. SAFETY
+    var safetySavings =
+      num('sf_ops') * num('sf_cost') * (num('sf_prob') / 100);
+
+    var total = scrapSavings + laborSavings + slurrySavings +
+                downtimeSavings + safetySavings;
+    var capture = total * 0.30;
+
+    document.getElementById('out_scrap').textContent    = fmt.format(scrapSavings);
+    document.getElementById('out_labor').textContent    = fmt.format(laborSavings);
+    document.getElementById('out_slurry').textContent   = fmt.format(slurrySavings);
+    document.getElementById('out_downtime').textContent = fmt.format(downtimeSavings);
+    document.getElementById('out_safety').textContent   = fmt.format(safetySavings);
+
+    document.getElementById('sum_scrap').textContent    = fmt.format(scrapSavings);
+    document.getElementById('sum_labor').textContent    = fmt.format(laborSavings);
+    document.getElementById('sum_slurry').textContent   = fmt.format(slurrySavings);
+    document.getElementById('sum_downtime').textContent = fmt.format(downtimeSavings);
+    document.getElementById('sum_safety').textContent   = fmt.format(safetySavings);
+    document.getElementById('sum_total').textContent    = fmt.format(total);
+
+    document.getElementById('grand_total').textContent  = fmt.format(total);
+    document.getElementById('capture_val').textContent  = fmt.format(capture);
+  }
+
+  function resetAll() {
+    Object.keys(DEFAULTS).forEach(function(id){
+      document.getElementById(id).value = DEFAULTS[id];
+    });
+    calc();
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    var inputs = document.querySelectorAll('input[type="number"]');
+    inputs.forEach(function(el){
+      DEFAULTS[el.id] = el.value;
+      el.addEventListener('input', calc);
+    });
+    calc();
+  });
+</script>
+
+</body>
+</html>
